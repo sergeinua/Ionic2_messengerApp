@@ -4,11 +4,13 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { AngularFireModule } from 'angularfire2';
 import { firebaseConfig } from './firebase.config';
+import { ListPage } from '../pages/list/list';
 
 @NgModule({
   declarations: [
     MyApp,
-    HomePage
+    HomePage,
+    ListPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -17,7 +19,8 @@ import { firebaseConfig } from './firebase.config';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    HomePage,
+    ListPage
   ],
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}]
 })

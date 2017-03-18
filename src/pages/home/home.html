@@ -1,14 +1,22 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
-  </ion-navbar>
+    <ion-navbar>
+        <ion-title>
+            Welcome
+        </ion-title>
+    </ion-navbar>
 </ion-header>
-
 <ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+    <ion-list>
+        <form (ngSubmit)="actionLogin(f.value)" #f="ngForm">
+            <ion-item>
+                <ion-label fixed>Username</ion-label>
+                <ion-input type="text" name="name" ngModel></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label fixed>Password</ion-label>
+                <ion-input type="password" name="password" ngModel></ion-input>
+            </ion-item>
+        <button type="submit" ion-button color="secondary" full>Login</button>
+        </form>
+    </ion-list>
 </ion-content>

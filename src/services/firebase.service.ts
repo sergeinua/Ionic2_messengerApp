@@ -7,25 +7,24 @@ import firebase from 'firebase';
 
 @Injectable()
 export class FirebaseService {
-    userName: string;
     db: any;
 
     constructor(private af: AngularFire) {
-        this.userName = null;
         this.db = firebase.database().ref();
     }
 
-    logIn(user, password) {
-        return new Promise(resolve => {
+    logIn(telNum) {
+        return new Promise((resolve, reject) => {
             const users = this.db.child('user');
-            const query = users.orderByChild('name').equalTo(user);
-            query.on('value', snap => {
+            users.on('value', snap => {
                 let _data = snap.toJSON();
-                if (_data && _data[user].password == password) {
-                    this.userName = _data[user].name;
+                if (_data && (typeof _data[telNum] != 'undefined') && (_data[telNum].name != null)) {
                     resolve(true);
+                } else {
+                    console.log('+');
+                    reject('User doesn\'t exist');
                 }
             });
-        }).catch(err => console.log('error', err));
+        });
     }
 }

@@ -8,11 +8,8 @@
 </ion-header>
 
 <ion-content padding>
-    <div *ngIf="noChats">
-        No chats have been created for now
-    </div>
     <ion-list inset>
-        <button ion-item *ngFor="let item of chats" (click)="handleItemClick(item)">
+        <button ion-item *ngFor="let item of chats" (click)="handleItemClick(item.$key)">
             {{ item.theme }}
         </button>
     </ion-list>

@@ -1,10 +1,6 @@
-import { AngularFire } from 'angularfire2';
-import { Injectable } from "@angular/core";
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/toPromise';
+import { AngularFire, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2';
+import { Injectable } from '@angular/core';
 import firebase from 'firebase';
-import 'rxjs/add/operator/map';
-
 
 @Injectable()
 export class FirebaseService {
@@ -29,19 +25,24 @@ export class FirebaseService {
     }
 
     getChatThemes() {
-        return new Promise((resolve, reject) => {
-            const chats = this.db.child('chat');
-            let _res = [];
-            chats.on('value', snap => {
-                snap.forEach((item) => {
-                    _res.push(item.toJSON());
-                });
-                if (_res) {
-                    resolve(_res);
-                } else {
-                    reject('No chats found');
-                }
-            });
-        });
+        return this.af.database.list('/chat') as FirebaseListObservable<Chat[]>;
     }
+
+    getChatThemeMsg(key) {
+        return this.af.database.object('/chat/' + key) as FirebaseObjectObservable<Chat>;
+    }
+
+    createNewMessage(themeId, sender, message) {
+        let newMessage = {
+            message: message,
+            sender: sender,
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+        };
+        this.db.child('chat').child(themeId).child('messages').push(newMessage);
+    }
+}
+
+interface Chat {
+    $key?: string;
+    messages?: any;
 }

@@ -1,26 +1,51 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
+
+import { FirebaseService } from '../../services/firebase.service';
 
 @Component({
     selector: 'page-chat',
-    templateUrl: 'chat.html'
+    templateUrl: 'chat.html',
+    providers: [ FirebaseService ]
 })
-export class ChatPage {
-    chatData: any;
+export class ChatPage implements OnInit {
+    chatKey: any;
     messages: any;
+    message: any;
+    sender: string;
 
-    constructor(public navCtrl: NavController, public navParams: NavParams) {
-        this.chatData = this.navParams.get('chatData');
-        this.messages = this.objAsArray(this.chatData.messages);
-        console.log('mess_',this.messages);
+    constructor(public navCtrl: NavController, public navParams: NavParams, private _fb: FirebaseService,
+                private storage: Storage) {
+        storage.ready()
+        .then(() => {
+            storage.get('tel')
+            .then((val) => {
+                this.sender = val;
+            });
+        });
     }
 
     ionViewDidLoad() {
 
     }
 
+    handleNewMessage() {
+        this._fb.createNewMessage(this.chatKey, this.sender, this.message);
+
+
+        this.message = null;
+    }
+
+    ngOnInit() {
+        this.chatKey = this.navParams.get('key');
+        this._fb.getChatThemeMsg(this.chatKey)
+        .subscribe((data) => {
+            this.messages = this.objAsArray(data.messages);
+        });
+    }
+
     objAsArray(obj){
         return Object.keys(obj).map((key)=>{ return obj[key]});
     }
-
 }

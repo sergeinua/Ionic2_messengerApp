@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { LoadingController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
@@ -12,11 +12,10 @@ import { ChatPage } from '../chat/chat';
     templateUrl: 'home.html',
     providers: [ FirebaseService ]
 })
-export class HomePage {
+export class HomePage implements OnInit {
     loader: any;
     prompt: any;
     error: any;
-    noChats: boolean;
     chats: any;
 
     constructor(public navCtrl: NavController, private _fb: FirebaseService,
@@ -64,16 +63,6 @@ export class HomePage {
                 }
             })
         });
-        this.noChats = true;
-        this._fb.getChatThemes()
-        .then((resp) => {
-            this.noChats = false;
-            this.chats = resp;
-        })
-        .catch((err) => {
-            this.noChats = true;
-            console.log('err', err);
-        });
     }
 
     actionLogin(telNumber) {
@@ -110,8 +99,15 @@ export class HomePage {
         this.error.present();
     }
 
-    handleItemClick(item) {
-        console.log('handle',item);
-        this.navCtrl.push(ChatPage, {chatData: item});
+    handleItemClick(itemKey) {
+        this.navCtrl.push(ChatPage, {key: itemKey});
+    }
+
+    ngOnInit() {
+        this.showLoader();
+        this._fb.getChatThemes().subscribe(result => {
+            this.chats = result;
+            this.hideLoader();
+        });
     }
 }

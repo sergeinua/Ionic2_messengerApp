@@ -41,6 +41,7 @@ export class ChatPage implements OnInit {
         this._fb.getChatThemeMsg(this.chatKey)
         .subscribe((data) => {
             this.messages = this.objAsArray(data.messages);
+            this.content.scrollToBottom();
         });
     }
 

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NavController, NavParams, Content } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
 import { FirebaseService } from '../../services/firebase.service';
@@ -14,6 +14,7 @@ export class ChatPage implements OnInit {
     messages: any;
     message: any;
     sender: string;
+    @ViewChild(Content) content: Content;
 
     constructor(public navCtrl: NavController, public navParams: NavParams, private _fb: FirebaseService,
                 private storage: Storage) {
@@ -32,8 +33,6 @@ export class ChatPage implements OnInit {
 
     handleNewMessage() {
         this._fb.createNewMessage(this.chatKey, this.sender, this.message);
-
-
         this.message = null;
     }
 
@@ -48,4 +47,9 @@ export class ChatPage implements OnInit {
     objAsArray(obj){
         return Object.keys(obj).map((key)=>{ return obj[key]});
     }
+
+    ionViewDidEnter() {
+        this.content.scrollToBottom();
+    }
+
 }

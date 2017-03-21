@@ -5,6 +5,7 @@ import { Storage } from '@ionic/storage';
 import { AlertController } from 'ionic-angular';
 
 import { FirebaseService } from '../../services/firebase.service';
+import { ChatPage } from '../chat/chat';
 
 @Component({
     selector: 'page-home',
@@ -15,6 +16,8 @@ export class HomePage {
     loader: any;
     prompt: any;
     error: any;
+    noChats: boolean;
+    chats: any;
 
     constructor(public navCtrl: NavController, private _fb: FirebaseService,
                 public loadingCtrl: LoadingController, public storage: Storage,
@@ -61,13 +64,22 @@ export class HomePage {
                 }
             })
         });
+        this.noChats = true;
+        this._fb.getChatThemes()
+        .then((resp) => {
+            this.noChats = false;
+            this.chats = resp;
+        })
+        .catch((err) => {
+            this.noChats = true;
+            console.log('err', err);
+        });
     }
 
     actionLogin(telNumber) {
         this.showLoader();
         this._fb.logIn(telNumber)
         .then((resp) => {
-            console.log('succ',resp);
             this.storage.set('tel', telNumber);
             this.hideLoader();
         })
@@ -87,7 +99,7 @@ export class HomePage {
     }
 
     ionViewDidLoad() {
-        // this.storage.clear();
+
     }
 
     showPrompt() {
@@ -96,5 +108,10 @@ export class HomePage {
 
     showError() {
         this.error.present();
+    }
+
+    handleItemClick(item) {
+        console.log('handle',item);
+        this.navCtrl.push(ChatPage, {chatData: item});
     }
 }

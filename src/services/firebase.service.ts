@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 import firebase from 'firebase';
+import 'rxjs/add/operator/map';
 
 
 @Injectable()
@@ -21,8 +22,24 @@ export class FirebaseService {
                 if (_data && (typeof _data[telNum] != 'undefined') && (_data[telNum].name != null)) {
                     resolve(true);
                 } else {
-                    console.log('+');
                     reject('User doesn\'t exist');
+                }
+            });
+        });
+    }
+
+    getChatThemes() {
+        return new Promise((resolve, reject) => {
+            const chats = this.db.child('chat');
+            let _res = [];
+            chats.on('value', snap => {
+                snap.forEach((item) => {
+                    _res.push(item.toJSON());
+                });
+                if (_res) {
+                    resolve(_res);
+                } else {
+                    reject('No chats found');
                 }
             });
         });

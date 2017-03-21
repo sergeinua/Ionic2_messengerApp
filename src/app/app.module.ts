@@ -4,6 +4,7 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { ProfilePage } from '../pages/profile/profile';
 import { SettingsPage } from '../pages/settings/settings';
+import { ChatPage } from '../pages/chat/chat';
 import { AngularFireModule } from 'angularfire2';
 import { firebaseConfig } from './firebase.config';
 import { IonicStorageModule } from '@ionic/storage';
@@ -13,7 +14,8 @@ import { IonicStorageModule } from '@ionic/storage';
         MyApp,
         HomePage,
         ProfilePage,
-        SettingsPage
+        SettingsPage,
+        ChatPage
     ],
     imports: [
         IonicModule.forRoot(MyApp),
@@ -25,7 +27,8 @@ import { IonicStorageModule } from '@ionic/storage';
         MyApp,
         HomePage,
         ProfilePage,
-        SettingsPage
+        SettingsPage,
+        ChatPage
     ],
     providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}]
 })

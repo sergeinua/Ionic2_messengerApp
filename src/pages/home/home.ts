@@ -47,8 +47,7 @@ export class HomePage {
                 {
                     text: 'OK',
                     handler: (data) => {
-                        //TODO: fix this shit
-                        location.reload();
+                        this.navCtrl.setRoot(HomePage);
                     }
                 }
             ]
@@ -88,7 +87,7 @@ export class HomePage {
     }
 
     ionViewDidLoad() {
-
+        // this.storage.clear();
     }
 
     showPrompt() {

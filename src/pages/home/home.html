@@ -1,5 +1,5 @@
 <ion-header>
-    <ion-navbar>
+    <ion-navbar *ngIf="loggedIn">
         <button ion-button menuToggle>
             <ion-icon name="menu"></ion-icon>
         </button>
@@ -8,7 +8,7 @@
 </ion-header>
 
 <ion-content padding>
-    <ion-list inset>
+    <ion-list inset *ngIf="loggedIn">
         <button ion-item *ngFor="let item of chats" (click)="handleItemClick(item.$key)">
             {{ item.theme }}
         </button>

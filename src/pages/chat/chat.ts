@@ -1,13 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NavController, NavParams, Content } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
+import { ImagePicker } from '@ionic-native/image-picker';
 
 import { FirebaseService } from '../../services/firebase.service';
 
 @Component({
     selector: 'page-chat',
     templateUrl: 'chat.html',
-    providers: [ FirebaseService ]
+    providers: [ FirebaseService, ImagePicker ]
 })
 export class ChatPage implements OnInit {
     chatKey: any;
@@ -17,10 +18,10 @@ export class ChatPage implements OnInit {
     @ViewChild(Content) content: Content;
 
     constructor(public navCtrl: NavController, public navParams: NavParams, private _fb: FirebaseService,
-                private storage: Storage) {
+                private storage: Storage, private imagePicker: ImagePicker) {
         storage.ready()
         .then(() => {
-            storage.get('tel')
+            storage.get('userId')
             .then((val) => {
                 this.sender = val;
             });
@@ -51,6 +52,14 @@ export class ChatPage implements OnInit {
 
     ionViewDidEnter() {
         this.content.scrollToBottom();
+    }
+
+    addPic() {
+        this.imagePicker.getPictures({}).then((results) => {
+            for (var i = 0; i < results.length; i++) {
+                console.log('Image URI: ' + results[i]);
+            }
+        }, (err) => { });
     }
 
 }

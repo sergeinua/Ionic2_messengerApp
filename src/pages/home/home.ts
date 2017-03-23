@@ -2,10 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { LoadingController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
-import { AlertController } from 'ionic-angular';
+import { AlertController, ToastController } from 'ionic-angular';
+
 
 import { FirebaseService } from '../../services/firebase.service';
 import { ChatPage } from '../chat/chat';
+import { ProfilePage } from '../profile/profile';
 
 @Component({
     selector: 'page-home',
@@ -17,10 +19,10 @@ export class HomePage implements OnInit {
     prompt: any;
     error: any;
     chats: any;
+    loggedIn: boolean;
 
-    constructor(public navCtrl: NavController, private _fb: FirebaseService,
-                public loadingCtrl: LoadingController, public storage: Storage,
-                public alertCtrl: AlertController) {
+    constructor(public navCtrl: NavController, private _fb: FirebaseService, public loadingCtrl: LoadingController,
+                public storage: Storage, public alertCtrl: AlertController, public toastCtrl: ToastController) {
         this.loader = this.loadingCtrl.create({
             spinner: 'ios'
         });
@@ -32,51 +34,54 @@ export class HomePage implements OnInit {
                     name: 'telNum',
                     placeholder: 'Your telephone number'
                 },
+                {
+                    name: 'password',
+                    placeholder: 'Your password'
+                }
             ],
             buttons: [
                 {
-                    text: 'OK',
+                    text: 'ok',
                     handler: (data) => {
-                        this.actionLogin(data.telNum);
+                        this.actionLogin(data.telNum, data.password);
                     }
-                }
-            ]
-        });
-        this.error = this.alertCtrl.create({
-            title: 'Tel num error',
-            subTitle: 'Look, we\'ve got no tel num matching your\'s',
-            buttons: [
+                },
                 {
-                    text: 'OK',
-                    handler: (data) => {
-                        this.navCtrl.setRoot(HomePage);
+                    text: 'register',
+                    handler: () => {
+                        this.navCtrl.setRoot(ProfilePage);
                     }
                 }
             ]
         });
+        this.loggedIn = false;
+        this.storage.remove('userId');
         storage.ready()
-        .then(() => {
-            storage.get('tel')
-            .then((val) => {
-                if (!val) {
-                    this.showPrompt();
-                }
-            })
-        });
+            .then(() => {
+                storage.get('userId')
+                    .then((val) => {
+                        if (!val) {
+                            this.showPrompt();
+                        } else {
+                            this.loggedIn = true;
+                        }
+                    })
+            });
     }
 
-    actionLogin(telNumber) {
+    actionLogin(telNumber, password) {
         this.showLoader();
-        this._fb.logIn(telNumber)
-        .then((resp) => {
-            this.storage.set('tel', telNumber);
-            this.hideLoader();
-        })
-        .catch((err) => {
-            this.hideLoader();
-            this.storage.remove('tel');
-            this.showError();
-        });
+        this._fb.logIn(telNumber, password)
+            .then((resp) => {
+                this.storage.set('userId', resp);
+                this.hideLoader();
+                this.loggedIn = true;
+            })
+            .catch((err) => {
+                this.hideLoader();
+                this.storage.remove('userId');
+                this.showError(err);
+            });
     }
 
     showLoader() {
@@ -95,7 +100,19 @@ export class HomePage implements OnInit {
         this.prompt.present();
     }
 
-    showError() {
+    showError(err) {
+        this.error = this.alertCtrl.create({
+            title: 'An error occured',
+            subTitle: err,
+            buttons: [
+                {
+                    text: 'ok',
+                    handler: (data) => {
+                        this.navCtrl.setRoot(HomePage);
+                    }
+                }
+            ]
+        });
         this.error.present();
     }
 
@@ -104,10 +121,8 @@ export class HomePage implements OnInit {
     }
 
     ngOnInit() {
-        this.showLoader();
         this._fb.getChatThemes().subscribe(result => {
             this.chats = result;
-            this.hideLoader();
         });
     }
 }

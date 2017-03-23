@@ -1,9 +1,38 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Profile</ion-title>
+    <ion-title>{{ title }}</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-    <button ion-button (click)="handleHome()">back</button>
+    <form (ngSubmit)="handleUser()">
+        <ion-list inset>
+            <ion-item>
+                <ion-label>Tel number</ion-label>
+                <ion-input
+                        type="text"
+                        [(ngModel)]="tel"
+                        name="tel"
+                ></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label>Your name</ion-label>
+                <ion-input
+                        type="text"
+                        [(ngModel)]="name"
+                        name="name"
+                ></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label>Your password</ion-label>
+                <ion-input
+                        type="password"
+                        [(ngModel)]="password"
+                        name="password"
+                ></ion-input>
+            </ion-item>
+        </ion-list>
+        <button type="submit" ion-button color="secondary" full>{{ btnLabel }}</button>
+    </form>
+    <button ion-button (click)="handleHome()" full>back</button>
 </ion-content>

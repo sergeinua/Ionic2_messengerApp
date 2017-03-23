@@ -19,10 +19,8 @@ export class ChatPage implements OnInit {
 
     constructor(public navCtrl: NavController, public navParams: NavParams, private _fb: FirebaseService,
                 private storage: Storage, private imagePicker: ImagePicker) {
-        storage.ready()
-        .then(() => {
-            storage.get('userId')
-            .then((val) => {
+        storage.ready().then(() => {
+            storage.get('userId').then((val) => {
                 this.sender = val;
             });
         });
@@ -39,8 +37,7 @@ export class ChatPage implements OnInit {
 
     ngOnInit() {
         this.chatKey = this.navParams.get('key');
-        this._fb.getChatThemeMsg(this.chatKey)
-        .subscribe((data) => {
+        this._fb.getChatThemeMsg(this.chatKey).subscribe((data) => {
             this.messages = this.objAsArray(data.messages);
             this.content.scrollToBottom();
         });

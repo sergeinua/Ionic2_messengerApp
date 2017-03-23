@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { Nav, Platform } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
-import { Storage } from '@ionic/storage';
 
 import { HomePage } from '../pages/home/home';
 import { ProfilePage } from '../pages/profile/profile';
@@ -18,9 +17,7 @@ export class MyApp {
 
     pages: Array<{title: string, component: any}>;
 
-    loggedIn: boolean;
-
-    constructor(public platform: Platform, public storage: Storage) {
+    constructor(public platform: Platform) {
         this.initializeApp();
 
         // used for an example of ngFor and navigation
@@ -28,17 +25,6 @@ export class MyApp {
             { title: 'Profile', component: ProfilePage },
             { title: 'Settings', component: SettingsPage }
         ];
-        storage.ready()
-            .then(() => {
-                storage.get('userId')
-                    .then((val) => {
-                        if (!val) {
-                            this.loggedIn = false;
-                        } else {
-                            this.loggedIn = true;
-                        }
-                    })
-            });
     }
 
   initializeApp() {

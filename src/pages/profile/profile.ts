@@ -56,21 +56,17 @@ export class ProfilePage implements OnInit {
 
     handleUser() {
         if (this.loggedIn) {
-            this._fb.updateUser(this.userId, this.tel, this.name, this.password)
-                .then((data) => {
-                    this.presentToast(data);
-                });
+            this._fb.updateUser(this.userId, this.tel, this.name, this.password).then((data) => {
+                this.presentToast(data);
+            });
         } else {
-            this._fb.createNewUser(this.tel, this.name)
-                .then((data) => {
-                    setTimeout(() => {
-                        this.handleHome();
-                    }, 3000);
-                    this.presentToast(data);
-                })
-
+            this._fb.createNewUser(this.tel, this.name).then((data) => {
+                setTimeout(() => {
+                    this.handleHome();
+                }, 3000);
+                this.presentToast(data);
+            })
         }
-
     }
 
     presentToast(message) {

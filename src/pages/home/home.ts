@@ -4,7 +4,6 @@ import { LoadingController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { AlertController, ToastController } from 'ionic-angular';
 
-
 import { FirebaseService } from '../../services/firebase.service';
 import { ChatPage } from '../chat/chat';
 import { ProfilePage } from '../profile/profile';
@@ -56,32 +55,28 @@ export class HomePage implements OnInit {
         });
         this.loggedIn = false;
         this.storage.remove('userId');
-        storage.ready()
-            .then(() => {
-                storage.get('userId')
-                    .then((val) => {
-                        if (!val) {
-                            this.showPrompt();
-                        } else {
-                            this.loggedIn = true;
-                        }
-                    })
-            });
+        storage.ready().then(() => {
+            storage.get('userId').then((val) => {
+                if (!val) {
+                    this.showPrompt();
+                } else {
+                    this.loggedIn = true;
+                }
+            })
+        });
     }
 
     actionLogin(telNumber, password) {
         this.showLoader();
-        this._fb.logIn(telNumber, password)
-            .then((resp) => {
-                this.storage.set('userId', resp);
-                this.hideLoader();
-                this.loggedIn = true;
-            })
-            .catch((err) => {
-                this.hideLoader();
-                this.storage.remove('userId');
-                this.showError(err);
-            });
+        this._fb.logIn(telNumber, password).then((resp) => {
+            this.storage.set('userId', resp);
+            this.hideLoader();
+            this.loggedIn = true;
+        }).catch((err) => {
+            this.hideLoader();
+            this.storage.remove('userId');
+            this.showError(err);
+        });
     }
 
     showLoader() {

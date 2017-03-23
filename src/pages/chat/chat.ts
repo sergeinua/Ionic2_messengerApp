@@ -4,6 +4,7 @@ import { Storage } from '@ionic/storage';
 import { ImagePicker } from '@ionic-native/image-picker';
 
 import { FirebaseService } from '../../services/firebase.service';
+import { Chat } from '../../services/firebase.service';
 
 @Component({
     selector: 'page-chat',
@@ -15,6 +16,7 @@ export class ChatPage implements OnInit {
     messages: any;
     message: any;
     sender: string;
+    title: string;
     @ViewChild(Content) content: Content;
 
     constructor(public navCtrl: NavController, public navParams: NavParams, private _fb: FirebaseService,
@@ -37,7 +39,8 @@ export class ChatPage implements OnInit {
 
     ngOnInit() {
         this.chatKey = this.navParams.get('key');
-        this._fb.getChatThemeMsg(this.chatKey).subscribe((data) => {
+        this._fb.getChatThemeMsg(this.chatKey).subscribe((data: Chat) => {
+            this.title = data.theme;
             this.messages = this.objAsArray(data.messages);
             this.content.scrollToBottom();
         });

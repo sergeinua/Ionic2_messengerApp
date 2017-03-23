@@ -48,7 +48,6 @@ export class FirebaseService {
                 sender: sender,
                 timestamp: firebase.database.ServerValue.TIMESTAMP
             };
-        //TODO: listen for response
         this.db.child('chat').child(themeId).child('messages').push(_message);
     }
 
@@ -85,7 +84,6 @@ export class FirebaseService {
     }
 
     getUserData(userId) {
-        // return this.af.database.object('/user/' + userId) as FirebaseObjectObservable<User>;
         return new Promise ((resolve, reject) => {
             this.db.child('/user/' + userId).once('value',
                 (data) => {
@@ -99,9 +97,10 @@ export class FirebaseService {
     }
 }
 
-interface Chat {
+export interface Chat {
     $key?: string;
     messages?: any;
+    theme?: string;
 }
 
 export interface User {
